@@ -9,7 +9,7 @@ import UIKit
 
 final class WeatherViewController: UIViewController {
 
-    private var timeOfDay: TimeOfDay = .day
+    private var timeOfDay: TimeOfDay = .evening
     private var weatherType: WeatherType = .heavyRain
     private var weatherTypePicker = WeatherTypePicker(weathers: WeatherType.allCases)
     private var weatherView = UIView()
@@ -18,6 +18,11 @@ final class WeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupContentView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        selectWeatherType()
     }
     
     override func viewDidLayoutSubviews() {
@@ -30,7 +35,6 @@ final class WeatherViewController: UIViewController {
         setupWeatherTypePicker()
         setupNavigationBar()
         setupBackgroundViewForStatusBar()
-        selectWeatherType()
         setupConstraints()
     }
     
@@ -65,20 +69,44 @@ final class WeatherViewController: UIViewController {
         
         if let index = WeatherType.allCases.firstIndex(of: randomWeatherType) {
             let indexPath = IndexPath(item: index, section: 0)
-            weatherTypePicker.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             weatherTypePicker.collectionView(weatherTypePicker, didSelectItemAt: indexPath)
+            weatherTypePicker.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
     }
     
     private func setupViewForWeatherType() -> UIView {
         switch weatherType {
             case .sunny:
-                return SunView(progress: 0.5)
+                switch timeOfDay {
+                    case .day:
+                        return SunView(progress: 0.5)
+                    case .evening:
+                        return SunView(progress: 0.96)
+                    case .night:
+                        return StarsView(frame: .zero)
+                }
             case .cloudy:
-                return CloudsView(thickness: .regular, topTint: .white, bottomTint: .white)
+                var colors = (UIColor.white, UIColor.white)
+                switch timeOfDay {
+                    case .day:
+                        colors = (Colors.lightCloud, Colors.lightCloud)
+                    case .evening:
+                        colors = (.systemPink.withAlphaComponent(0.1), Colors.lightCloud)
+                    case .night:
+                        colors = (Colors.lightCloud, Colors.lightCloud)
+                }
+                return CloudsView(thickness: .regular, topTint: colors.0, bottomTint: colors.1)
             case .mostlySunny:
-                let sunView = SunView(progress: 0.5)
-                sunView.addSubview(CloudsView(thickness: .thin, topTint: .white, bottomTint: .white))
+                var sunView = SunView(progress: 0.5)
+                switch timeOfDay {
+                    case .day:
+                        sunView = SunView(progress: 0.5)
+                    case .evening:
+                        sunView = SunView(progress: 0.96)
+                    case .night:
+                        return StarsView(frame: .zero)
+                }
+                sunView.addSubview(CloudsView(thickness: .thin, topTint: Colors.lightCloud, bottomTint: Colors.lightCloud))
                 return sunView
             case .rain:
                 return RainView(strength: 80)
@@ -97,6 +125,10 @@ final class WeatherViewController: UIViewController {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = weatherView.bounds
         gradientLayer.colors = getGradientColorsForCurrentWeather()
+            
+        if  timeOfDay == .evening, [.sunny, .mostlySunny, .cloudy, .snow].contains(weatherType) {
+            gradientLayer.locations = [0.0, 0.6, 0.8, 0.98, 1.0]
+        }
         
         if let sublayers = weatherView.layer.sublayers {
             for layer in sublayers {
@@ -114,7 +146,7 @@ final class WeatherViewController: UIViewController {
             case .day:
                 return Colors.daytimeGradient(fitting: weatherType)
             case .evening:
-                return Colors.eveningGradint(fitting: weatherType)
+                return Colors.eveningGradient(fitting: weatherType)
             case .night:
                 return [
                     UIColor(red: 0.25, green: 0.41, blue: 0.88, alpha: 1.0).cgColor,
@@ -143,13 +175,22 @@ final class WeatherViewController: UIViewController {
     }
     
     @objc private func showTimeOfDayAlert() {
-        let alertController = UIAlertController(title: NSLocalizedString("Select Time of Day", comment: "Select Time of Day"), message: nil, preferredStyle: .actionSheet)
+        let alertController = UIAlertController(
+            title: NSLocalizedString("Select Time of Day",
+            comment: "Select Time of Day"),
+            message: nil,
+            preferredStyle: .actionSheet
+        )
         
         let dayAction = UIAlertAction(title: NSLocalizedString("Day", comment: "Day"), style: .default) { _ in
             self.timeOfDay = .day
             self.setupBackgroundForWeatherType()
         }
-        let eveningAction = UIAlertAction(title: NSLocalizedString("Evening", comment: "Evening"), style: .default) { _ in
+        let eveningAction = UIAlertAction(
+            title: NSLocalizedString("Evening",
+            comment: "Evening"),
+            style: .default
+        ) { _ in
             self.timeOfDay = .evening
             self.setupBackgroundForWeatherType()
         }
@@ -157,7 +198,12 @@ final class WeatherViewController: UIViewController {
             self.timeOfDay = .night
             self.setupBackgroundForWeatherType()
         }
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(
+            title: NSLocalizedString("Cancel",
+            comment: "Cancel"),
+            style: .cancel,
+            handler: nil
+        )
         
         alertController.addAction(dayAction)
         alertController.addAction(eveningAction)
