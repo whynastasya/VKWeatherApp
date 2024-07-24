@@ -13,6 +13,7 @@ enum Colors {
     static let lightCloud = UIColor.white
     static let darkCloudStart = UIColor.gray
     static let darkCloudEnd = UIColor.darkGray
+    static let sunsetCloud = UIColor.systemPink.withAlphaComponent(0.05)
     
     static func daytimeGradient(fitting weatherType: WeatherType) -> [CGColor] {
         switch weatherType {
@@ -52,6 +53,21 @@ enum Colors {
                 return [
                     UIColor(red: 0.23, green: 0.32, blue: 0.43, alpha: 1.0).cgColor,
                     UIColor(red: 0.12, green: 0.17, blue: 0.22, alpha: 1.0).cgColor
+                ]
+        }
+    }
+    
+    static func nightGradient(fitting weatherType: WeatherType) -> [CGColor] {
+        switch weatherType {
+            case .sunny, .mostlySunny, .cloudy, .snow:
+                return [
+                    UIColor(red: 0.25, green: 0.41, blue: 0.78, alpha: 1.0).cgColor,
+                    UIColor(red: 0.11, green: 0.22, blue: 0.63, alpha: 1.0).cgColor
+                ]
+            case .rain, .heavyRain, .thunderstorm, .overcast:
+                return [
+                    UIColor(red: 0.20, green: 0.40, blue: 0.60, alpha: 1.0).cgColor,
+                    UIColor(red: 0.10, green: 0.10, blue: 0.20, alpha: 1.0).cgColor
                 ]
         }
     }

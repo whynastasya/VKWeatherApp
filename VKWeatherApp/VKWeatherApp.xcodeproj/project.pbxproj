@@ -20,10 +20,8 @@
 		EEAB10DF2C4DAEEF00EDBDB6 /* StormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAB10DE2C4DAEEF00EDBDB6 /* StormView.swift */; };
 		EEAB10E22C4DAF5700EDBDB6 /* StormDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAB10E12C4DAF5700EDBDB6 /* StormDrop.swift */; };
 		EEAB10E42C4DAFD600EDBDB6 /* StormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAB10E32C4DAFD600EDBDB6 /* StormViewModel.swift */; };
-		EED4CBFB2C4E66DF00E6CAF1 /* Meteor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED4CBFA2C4E66DE00E6CAF1 /* Meteor.swift */; };
 		EED4CBFE2C4E678200E6CAF1 /* Star.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED4CBFD2C4E678200E6CAF1 /* Star.swift */; };
 		EED4CC002C4E679800E6CAF1 /* StarField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED4CBFF2C4E679800E6CAF1 /* StarField.swift */; };
-		EED4CC022C4E71E200E6CAF1 /* MeteorShower.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED4CC012C4E71E200E6CAF1 /* MeteorShower.swift */; };
 		EED4CC062C4E73FD00E6CAF1 /* StarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED4CC052C4E73FD00E6CAF1 /* StarsView.swift */; };
 		EED4CC082C4E7B9C00E6CAF1 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED4CC072C4E7B9C00E6CAF1 /* Colors.swift */; };
 		EED4CC0B2C4E802A00E6CAF1 /* ThunderstormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED4CC0A2C4E802A00E6CAF1 /* ThunderstormView.swift */; };
@@ -54,10 +52,8 @@
 		EEAB10DE2C4DAEEF00EDBDB6 /* StormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StormView.swift; sourceTree = "<group>"; };
 		EEAB10E12C4DAF5700EDBDB6 /* StormDrop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StormDrop.swift; sourceTree = "<group>"; };
 		EEAB10E32C4DAFD600EDBDB6 /* StormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StormViewModel.swift; sourceTree = "<group>"; };
-		EED4CBFA2C4E66DE00E6CAF1 /* Meteor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meteor.swift; sourceTree = "<group>"; };
 		EED4CBFD2C4E678200E6CAF1 /* Star.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Star.swift; sourceTree = "<group>"; };
 		EED4CBFF2C4E679800E6CAF1 /* StarField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarField.swift; sourceTree = "<group>"; };
-		EED4CC012C4E71E200E6CAF1 /* MeteorShower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeteorShower.swift; sourceTree = "<group>"; };
 		EED4CC052C4E73FD00E6CAF1 /* StarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarsView.swift; sourceTree = "<group>"; };
 		EED4CC072C4E7B9C00E6CAF1 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		EED4CC0A2C4E802A00E6CAF1 /* ThunderstormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThunderstormView.swift; sourceTree = "<group>"; };
@@ -162,10 +158,8 @@
 		EED4CBFC2C4E66F800E6CAF1 /* Star */ = {
 			isa = PBXGroup;
 			children = (
-				EED4CBFA2C4E66DE00E6CAF1 /* Meteor.swift */,
 				EED4CBFD2C4E678200E6CAF1 /* Star.swift */,
 				EED4CBFF2C4E679800E6CAF1 /* StarField.swift */,
-				EED4CC012C4E71E200E6CAF1 /* MeteorShower.swift */,
 				EED4CC052C4E73FD00E6CAF1 /* StarsView.swift */,
 			);
 			path = Star;
@@ -285,7 +279,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EED4CBFB2C4E66DF00E6CAF1 /* Meteor.swift in Sources */,
 				EED4CC082C4E7B9C00E6CAF1 /* Colors.swift in Sources */,
 				EE0DD7632C480A27008457AF /* WeatherType.swift in Sources */,
 				EED4CC002C4E679800E6CAF1 /* StarField.swift in Sources */,
@@ -301,7 +294,6 @@
 				EEF898CE2C4B0919000C70C0 /* CloudsView.swift in Sources */,
 				EE0DD76F2C4824C6008457AF /* Fonts.swift in Sources */,
 				EED4CC0F2C4EE83600E6CAF1 /* RainView.swift in Sources */,
-				EED4CC022C4E71E200E6CAF1 /* MeteorShower.swift in Sources */,
 				EE0DD7682C480B2D008457AF /* WeatherTypeCell.swift in Sources */,
 				EEAB10E42C4DAFD600EDBDB6 /* StormViewModel.swift in Sources */,
 				EE0DD76C2C4810A1008457AF /* WeatherTypePicker.swift in Sources */,

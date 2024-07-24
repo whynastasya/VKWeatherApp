@@ -9,7 +9,7 @@ import UIKit
 
 final class WeatherViewController: UIViewController {
 
-    private var timeOfDay: TimeOfDay = .evening
+    private var timeOfDay: TimeOfDay = .night
     private var weatherType: WeatherType = .heavyRain
     private var weatherTypePicker = WeatherTypePicker(weathers: WeatherType.allCases)
     private var weatherView = UIView()
@@ -48,7 +48,7 @@ final class WeatherViewController: UIViewController {
         navigationController?.navigationBar.topItem?.title = NSLocalizedString("NavigationBarTitle", comment: "Weather")
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        let timeOfDayButton = UIBarButtonItem(image: UIImage(systemName: "clock"), style: .done, target: self, action: #selector(showTimeOfDayAlert))
+        let timeOfDayButton = UIBarButtonItem(image: UIImage(systemName: "clock")?.withTintColor(.white, renderingMode: .alwaysOriginal), style: .done, target: self, action: #selector(showTimeOfDayAlert))
         navigationItem.rightBarButtonItem = timeOfDayButton
     }
     
@@ -81,41 +81,47 @@ final class WeatherViewController: UIViewController {
                     case .day:
                         return SunView(progress: 0.5)
                     case .evening:
-                        return SunView(progress: 0.96)
+                        return SunView(progress: 0.98)
                     case .night:
-                        return StarsView(frame: .zero)
+                        return StarsView(frame: view.bounds)
                 }
             case .cloudy:
-                var colors = (UIColor.white, UIColor.white)
+                var colors = (Colors.lightCloud, Colors.lightCloud)
+                var cloudsView = CloudsView(thickness: .regular, topTint: colors.0, bottomTint: colors.1)
                 switch timeOfDay {
                     case .day:
                         colors = (Colors.lightCloud, Colors.lightCloud)
                     case .evening:
-                        colors = (.systemPink.withAlphaComponent(0.1), Colors.lightCloud)
+                        colors = (Colors.sunsetCloud, Colors.lightCloud)
                     case .night:
-                        colors = (Colors.lightCloud, Colors.lightCloud)
+                        colors = (Colors.lightCloud.withAlphaComponent(0.1), Colors.lightCloud.withAlphaComponent(0.1))
+                        cloudsView.addSubview(StarsView(frame: view.bounds))
                 }
-                return CloudsView(thickness: .regular, topTint: colors.0, bottomTint: colors.1)
+                return cloudsView
             case .mostlySunny:
-                var sunView = SunView(progress: 0.5)
+                var mostlySunnyView = UIView()
+                var colors = (Colors.lightCloud, Colors.lightCloud)
                 switch timeOfDay {
                     case .day:
-                        sunView = SunView(progress: 0.5)
+                        mostlySunnyView = SunView(progress: 0.5)
+                        colors = (Colors.lightCloud, Colors.lightCloud)
                     case .evening:
-                        sunView = SunView(progress: 0.96)
+                        mostlySunnyView = SunView(progress: 0.98)
+                        colors = (Colors.sunsetCloud, Colors.lightCloud)
                     case .night:
-                        return StarsView(frame: .zero)
+                        colors = (Colors.lightCloud, Colors.lightCloud)
+                        mostlySunnyView = StarsView(frame: view.bounds)
                 }
-                sunView.addSubview(CloudsView(thickness: .thin, topTint: Colors.lightCloud, bottomTint: Colors.lightCloud))
-                return sunView
+                mostlySunnyView.addSubview(CloudsView(thickness: .thin, topTint: colors.0, bottomTint: colors.1))
+                return mostlySunnyView
             case .rain:
                 return RainView(strength: 80)
             case .heavyRain:
                 return RainView(strength: 200)
             case .thunderstorm:
-                return ThunderstormView(stormType: .rain,strength: 200, cloudThickness: .thick, topTint: .darkGray, bottomTint: .darkGray)
+                return ThunderstormView(stormType: .rain,strength: 200, cloudThickness: .thick, topTint: Colors.darkCloudEnd, bottomTint: Colors.darkCloudEnd)
             case .overcast:
-                return CloudsView(thickness: .regular, topTint: .gray, bottomTint: .darkGray)
+                return CloudsView(thickness: .regular, topTint: Colors.darkCloudStart, bottomTint: Colors.darkCloudEnd)
             case .snow:
                 return RainView(stormType: .snow, strength: 300)
         }
@@ -127,7 +133,7 @@ final class WeatherViewController: UIViewController {
         gradientLayer.colors = getGradientColorsForCurrentWeather()
             
         if  timeOfDay == .evening, [.sunny, .mostlySunny, .cloudy, .snow].contains(weatherType) {
-            gradientLayer.locations = [0.0, 0.6, 0.8, 0.98, 1.0]
+            gradientLayer.locations = [0.0, 0.5, 0.8, 0.99, 1.0]
         }
         
         if let sublayers = weatherView.layer.sublayers {
@@ -148,10 +154,7 @@ final class WeatherViewController: UIViewController {
             case .evening:
                 return Colors.eveningGradient(fitting: weatherType)
             case .night:
-                return [
-                    UIColor(red: 0.25, green: 0.41, blue: 0.88, alpha: 1.0).cgColor,
-                    UIColor(red: 0.11, green: 0.22, blue: 0.73, alpha: 1.0).cgColor
-                ]
+                return Colors.nightGradient(fitting: weatherType)
         }
     }
     
@@ -219,9 +222,7 @@ extension WeatherViewController: WeatherTypePickerDelegate {
         self.weatherType = weatherType
         weatherView.removeFromSuperview()
         weatherView = setupViewForWeatherType()
-        weatherView.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(weatherView, belowSubview: weatherTypePicker)
-        setupBackgroundForWeatherType()
+        setupWeatherView()
         setupConstraints()
     }
 }

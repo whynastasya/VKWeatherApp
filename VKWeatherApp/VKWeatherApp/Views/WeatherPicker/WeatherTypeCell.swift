@@ -23,7 +23,7 @@ final class WeatherTypeCell: UICollectionViewCell {
     
     func configure(with weather: WeatherType, isSelected: Bool) {
         weatherTitleLabel.text = weather.localizedName.lowercased()
-        weatherTitleLabel.textColor = isSelected ? .black : .darkGray
+        updateTextColor(isSelected: isSelected)
     }
     
     private func setupContentView() {
@@ -33,7 +33,7 @@ final class WeatherTypeCell: UICollectionViewCell {
     
     private func setupWeatherTitleLabel() {
         weatherTitleLabel.font = Fonts.weatherTypePicker
-        weatherTitleLabel.textAlignment  = .center
+        weatherTitleLabel.textAlignment = .center
         weatherTitleLabel.text = "Солнечно"
         weatherTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(weatherTitleLabel)
@@ -46,5 +46,20 @@ final class WeatherTypeCell: UICollectionViewCell {
             weatherTitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             weatherTitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
+    }
+    
+    private func updateTextColor(isSelected: Bool) {
+        if traitCollection.userInterfaceStyle == .dark {
+            weatherTitleLabel.textColor = isSelected ? .white : .darkGray
+        } else {
+            weatherTitleLabel.textColor = isSelected ? .black : .darkGray
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            updateTextColor(isSelected: weatherTitleLabel.textColor == .black || weatherTitleLabel.textColor == .white)
+        }
     }
 }
