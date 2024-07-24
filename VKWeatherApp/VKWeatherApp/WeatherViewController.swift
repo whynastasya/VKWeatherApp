@@ -201,7 +201,7 @@ final class WeatherViewController: UIViewController {
             message: nil,
             preferredStyle: .actionSheet
         )
-        
+    
         let textColor: UIColor = traitCollection.userInterfaceStyle == .dark ? .white : .black
         
         let titleAttrString = NSAttributedString(string: NSLocalizedString("Select Time of Day", comment: "Select Time of Day"), attributes: [
@@ -212,14 +212,17 @@ final class WeatherViewController: UIViewController {
         let dayAction = UIAlertAction(title: NSLocalizedString("Day", comment: "Day"), style: .default) { _ in
             self.timeOfDay = .day
             self.setupBackgroundForWeatherType()
+            self.weatherView = self.setupViewForWeatherType()
         }
         let eveningAction = UIAlertAction(title: NSLocalizedString("Evening", comment: "Evening"), style: .default) { _ in
             self.timeOfDay = .evening
             self.setupBackgroundForWeatherType()
+            self.weatherView = self.setupViewForWeatherType()
         }
         let nightAction = UIAlertAction(title: NSLocalizedString("Night", comment: "Night"), style: .default) { _ in
             self.timeOfDay = .night
             self.setupBackgroundForWeatherType()
+            self.weatherView = self.setupViewForWeatherType()
         }
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         
