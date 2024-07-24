@@ -47,10 +47,28 @@ final class WeatherViewController: UIViewController {
     private func setupNavigationBar() {
         navigationController?.navigationBar.topItem?.title = NSLocalizedString("NavigationBarTitle", comment: "Weather")
         navigationController?.navigationBar.prefersLargeTitles = true
+        updateNavigationBarButtonColor()
+    }
+
+    private func updateNavigationBarButtonColor() {
+        let color: UIColor
+        if traitCollection.userInterfaceStyle == .dark {
+            color = .white
+        } else {
+            color = .black
+        }
         
-        let timeOfDayButton = UIBarButtonItem(image: UIImage(systemName: "clock")?.withTintColor(.white, renderingMode: .alwaysOriginal), style: .done, target: self, action: #selector(showTimeOfDayAlert))
+        let timeOfDayButton = UIBarButtonItem(image: UIImage(systemName: "clock")?.withTintColor(color, renderingMode: .alwaysOriginal), style: .done, target: self, action: #selector(showTimeOfDayAlert))
         navigationItem.rightBarButtonItem = timeOfDayButton
     }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            updateNavigationBarButtonColor()
+        }
+    }
+
     
     private func setupWeatherView() {
         weatherView.translatesAutoresizingMaskIntoConstraints = false
@@ -179,21 +197,23 @@ final class WeatherViewController: UIViewController {
     
     @objc private func showTimeOfDayAlert() {
         let alertController = UIAlertController(
-            title: NSLocalizedString("Select Time of Day",
-            comment: "Select Time of Day"),
+            title: NSLocalizedString("Select Time of Day", comment: "Select Time of Day"),
             message: nil,
             preferredStyle: .actionSheet
         )
+        
+        let textColor: UIColor = traitCollection.userInterfaceStyle == .dark ? .white : .black
+        
+        let titleAttrString = NSAttributedString(string: NSLocalizedString("Select Time of Day", comment: "Select Time of Day"), attributes: [
+            .foregroundColor: textColor
+        ])
+        alertController.setValue(titleAttrString, forKey: "attributedTitle")
         
         let dayAction = UIAlertAction(title: NSLocalizedString("Day", comment: "Day"), style: .default) { _ in
             self.timeOfDay = .day
             self.setupBackgroundForWeatherType()
         }
-        let eveningAction = UIAlertAction(
-            title: NSLocalizedString("Evening",
-            comment: "Evening"),
-            style: .default
-        ) { _ in
+        let eveningAction = UIAlertAction(title: NSLocalizedString("Evening", comment: "Evening"), style: .default) { _ in
             self.timeOfDay = .evening
             self.setupBackgroundForWeatherType()
         }
@@ -201,12 +221,12 @@ final class WeatherViewController: UIViewController {
             self.timeOfDay = .night
             self.setupBackgroundForWeatherType()
         }
-        let cancelAction = UIAlertAction(
-            title: NSLocalizedString("Cancel",
-            comment: "Cancel"),
-            style: .cancel,
-            handler: nil
-        )
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
+        
+        dayAction.setValue(textColor, forKey: "titleTextColor")
+        eveningAction.setValue(textColor, forKey: "titleTextColor")
+        nightAction.setValue(textColor, forKey: "titleTextColor")
+        cancelAction.setValue(textColor, forKey: "titleTextColor")
         
         alertController.addAction(dayAction)
         alertController.addAction(eveningAction)
